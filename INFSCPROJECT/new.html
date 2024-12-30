@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sureflix</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #880505;
+            color: #050505;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #000;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1rem;
+        }
+        .navbar a:hover {
+            color: #f5c518;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-image: url('https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/cinema%20seats%20(1).jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+        .watchlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.watchlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.watchlist-item button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.watchlist-item button:hover {
+    background-color: darkred;
+}
+
+        /* Movie Grid */
+        .movies {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+        .movie-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+        .movie-card img {
+            width: 100%;
+            height: auto;
+        }
+        .movie-card .details {
+            padding: 1rem;
+        }
+        .movie-card h3 {
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem;
+        }
+        .movie-card button {
+            background-color: #f5c518;
+            color: #000;
+            padding: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .movie-card button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+        .movie-card p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: #666;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background: #fff;
+            margin: 10% auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        .modal-content h2 {
+            margin: 0 0 1rem;
+        }
+        .modal-content label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .modal-content input,
+        .modal-content select,
+        .modal-content button {
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .modal-content button {
+            background-color: #000;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .modal-content .close {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #aaa;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+
+/* Modal Content */
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Header Styling */
+.modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-header p {
+    margin: 5px 0 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Body Styling */
+.modal-body {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.watchlist {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.watchlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.watchlist-item span {
+    font-size: 16px;
+    color: #333;
+}
+
+.watchlist-item button {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Footer Styling */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-footer .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-clear {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.btn-close {
+    background-color: #3498db;
+    color: #fff;
+}
+
+/* Close Button */
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+    </style>
+</head>
+
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#" onclick="refreshPage()">Home</a>
+        <a href="#" onclick="openModal('watchlistModal')">Watchlist</a>
+        <a href="#" onclick="openModal('settingsModal')">Settings</a>
+        <a href="#" onclick="openModal('loginModal')">Login</a>
+    </div>
+
+<!-- Watchlist Modal -->
+<div id="watchlistModal" class="modal" role="dialog" aria-labelledby="watchlistTitle" aria-hidden="true" style="display:none;">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('watchlistModal')" aria-label="Close">&times;</span>
+        <h2 id="watchlistTitle">Watchlist</h2>
+        <p>Here are the movies in your watchlist.</p>
+       <!-- Watchlist Content -->
+       <ul id="watchlistItems" class="watchlist">
+        <!-- Movie items will be dynamically added here -->
+    </ul>
+
+    <!-- Watchlist Actions -->
+    <div class="modal-actions">
+        <button type="button" onclick="clearWatchlist()">Clear All</button>
+        <button type="button" onclick="closeModal('watchlistModal')">Close</button>
+    </div>
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" class="modal" role="dialog" aria-labelledby="settingsTitle" aria-hidden="true" style="display:none;">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('settingsModal')" aria-label="Close">&times;</span>
+        <h2 id="settingsTitle">Settings</h2>
+        <p>Manage your account settings here.</p>
+         <!-- Settings Content -->
+         <form id="settingsForm">
+            <!-- User Information Section -->
+            <fieldset>
+                <legend>Account Information</legend>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+            </fieldset>
+
+            <!-- Preferences Section -->
+            <fieldset>
+                <legend>Preferences</legend>
+                <label for="theme">Theme:</label>
+                <select id="theme" name="theme">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+                <label for="notifications">Notifications:</label>
+                <input type="checkbox" id="notifications" name="notifications">
+                <label for="notifications">Enable Notifications</label>
+            </fieldset>
+
+            <!-- Privacy Section -->
+            <fieldset>
+                <legend>Privacy</legend>
+                <button type="button" onclick="openPrivacyPolicy()">Privacy Policy</button>
+                <button type="button" onclick="deleteAccount()">Delete Account</button>
+            </fieldset>
+
+            <div class="modal-actions">
+                <button type="submit">Save Changes</button>
+                <button type="button" onclick="closeModal('settingsModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Welcome to Sureflix</h1>
+        <p>Your ultimate source for movies.</p>
+    </div>
+
+    <!-- Movie Grid Section -->
+    <div class="movies">
+        <!-- Movie Card -->
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/green bones.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>Green Bones</h3>
+                <p>Rating: ★★★★★</p>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/and the breadwinner is.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>And the breadwinner is,</h3>
+                <p>Rating: ★★★★★</p>
+                <button onclick="addToWatchlist('And the breadwinner is,')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/espantaho.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>Espantaho</h3>
+                <p>Rating: ★★★</p>
+                <button onclick="addToWatchlist('Espantaho')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/uninvited.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>Uninvited</h3>
+                <p>Rating: ★★★★</p>
+                <button onclick="addToWatchlist('Uninvited')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/mufasa.jpeg" alt="Movie Poster">
+            <div class="details">
+                <h3>Mufasa: The Lion King</h3>
+                <p>Rating: ★★★★</p>
+                <button onclick="addToWatchlist('Mufasa: The Lion King')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/The_Kingdom_(2024)_Official_Poster.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>The Kingdom</h3>
+                <p>Rating: ★★★★★</p>
+                <button onclick="addToWatchlist('The Kingdom')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/Nosferatu-Poster.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>Nosferatu</h3>
+                <p>Rating: ★★★★</p>
+                <button onclick="addToWatchlist('Nosferatu')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/hold me close.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>Hold me Close</h3>
+                <p>Rating: ★★★</p>
+                <button onclick="addToWatchlist('Hold me Close')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/topakk.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3><Table>Topakk</Table></h3>
+                <p>Rating: ★★★</p>
+                <button onclick="addToWatchlist('Topakk')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/my future you poster.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>My Future You</h3>
+                <p>Rating: ★★★★</p>
+                <button onclick="addToWatchlist('My Future You')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+        <div class="movie-card">
+            <img src="https://raw.githubusercontent.com/jrdnlrs/INFOSEC-PROJECT/main/movie%20posters/taiwan killer hospital.jpg" alt="Movie Poster">
+            <div class="details">
+                <h3>Strange Frequencies: Taiwan Killer Hospital</h3>
+                <p>Rating: ★★★</p>
+                <button onclick="addToWatchlist('Strange Frequencies: Taiwan Killer Hospital')">Add to Watchlist</button>
+                <button onclick="openModal('bookingModal')">Book Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <form>
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" required>
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" required>
+                <button type="submit">Login</button>
+            </form>
+            <p>
+                Don't have an account? 
+                <a href="#" onclick="switchToRegister()">Register here</a>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal" role="dialog" aria-labelledby="registerTitle" aria-hidden="true" style="display:none;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('registerModal')" aria-label="Close">&times;</span>
+            <h2 id="registerTitle">Register</h2>
+            <form id="registerForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" required>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal" role="dialog" aria-labelledby="bookingTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('bookingModal')" aria-label="Close">&times;</span>
+            <h2 id="bookingTitle">Reserve Your Seat</h2>
+            <form id="reservationForm">
+            <form>
+                <label for="location">Select Location:</label>
+                <select id="location" required>
+                    <option value="SM CITY MANILA">SM CITY MANILA</option>
+                    <option value="SM SAN LAZARO">SM SAN LAZARO</option>
+                    <option value="SM CITY STA MESA">SM CITY STA MESA</option>
+                    <option value="SM NORTH EDSA">SM NORTH EDSA</option>
+                </select>
+                <label for="time">Show Time:</label>
+                <select id="time" required>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="02:00 PM">02:00 PM</option>
+                    <option value="05:00 PM">05:00 PM</option>
+                    <option value="08:00 PM">08:00 PM</option>
+                </select>
+                <label for="seatCount">Seats:</label>
+                <input type="number" id="seatCount" min="1" max="10" required>
+                <button type="submit">Confirm</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Sureflix. All rights reserved.</p>
+    </div>
+
+
+
+    <!-- JavaScript -->
+    <script>
+  // Simulate user sign-in state
+  let isSignedIn = false; // Change to true to simulate a registered user
+
+// Handle form submission
+document.getElementById("reservationForm").addEventListener("submit", (event) => {
+    if (!isSignedIn) {
+        event.preventDefault(); // Stop form submission
+        openModal("registerModal"); // Prompt the user to register
+    } else {
+        alert("Reservation confirmed!");
+    }
+});
+
+// Handle register form submission
+document.getElementById("registerForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    // Basic validation
+    if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    // Simulate successful registration
+    isSignedIn = true;
+    alert(`Welcome, ${username}! You are now registered.`);
+    closeModal("registerModal"); // Close register modal
+    openModal("bookingModal"); // Optionally return to the booking modal
+});
+
+// Watchlist functionality
+let watchlist = [];
+
+// Add a movie to the watchlist
+function addToWatchlist(movieName) {
+    if (watchlist.includes(movieName)) {
+        alert(`${movieName} is already in your watchlist.`);
+    } else {
+        watchlist.push(movieName);
+        renderWatchlist();
+        alert(`${movieName} added to your watchlist.`);
+    }
+}
+
+// Render the watchlist
+function renderWatchlist() {
+    const watchlistItems = document.getElementById("watchlistItems");
+    watchlistItems.innerHTML = ""; // Clear existing list
+
+    watchlist.forEach((movie, index) => {
+        const listItem = document.createElement("li");
+        listItem.className = "watchlist-item";
+        listItem.innerHTML = `
+            <span>${movie}</span>
+            <button onclick="removeFromWatchlist(${index})">Remove</button>
+        `;
+        watchlistItems.appendChild(listItem);
+    });
+}
+
+// Remove a movie from the watchlist
+function removeFromWatchlist(index) {
+    watchlist.splice(index, 1);
+    renderWatchlist();
+}
+
+// Clear all movies from the watchlist
+function clearWatchlist() {
+    watchlist = [];
+    renderWatchlist();
+    alert("Watchlist cleared.");
+}
+         function refreshPage() {
+        location.reload();
+        }
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        function switchToRegister() {
+        closeModal("loginModal"); // Close the login modal
+        openModal("registerModal"); // Open the register modal
+        }
+    </script>
+</body>
+</html>
